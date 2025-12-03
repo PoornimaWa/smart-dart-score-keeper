@@ -440,7 +440,7 @@ button:focus-visible {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 641px) {
   .top-bar {
     flex-direction: column;
     align-items: flex-start;
