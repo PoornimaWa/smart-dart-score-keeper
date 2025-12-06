@@ -1,7 +1,7 @@
 // /src/controller/setup.ts
 
-import { StateManager } from "../model/stateManager.js";
-import { UIHandler } from "../view/uiHandler.js";
+import { StateManager } from "../models/stateManager";
+import { UIHandler } from "../views/uiHandler";
 
 export class SetupController {
   private stateManager: StateManager;
