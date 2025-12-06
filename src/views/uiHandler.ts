@@ -1,6 +1,6 @@
 // /src/view/uiHandler.ts
 
-import { StateManager, GameState } from "../model/stateManager.js";
+import { StateManager, GameState } from "../models/stateManager.js";
 
 export class UIHandler {
   private stateManager: StateManager;
