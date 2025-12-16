@@ -1,15 +1,14 @@
-
-
 export interface Player {
   name: string;
   score: number;
-  legsWon: number;
   turns: number[];
+  legsWon: number;
 }
 
 export interface GameState {
   players: Player[];
   currentPlayer: number;
+  startingScore: number;
   maxLegs: number;
 }
 
@@ -20,51 +19,41 @@ export class StateManager {
     this.state = {
       players: [],
       currentPlayer: 0,
-      maxLegs: 3,
+      startingScore: 301,
+      maxLegs: 3
     };
   }
 
-  initializePlayers(player1: string, player2: string, gameType: number, legsPerSet: number) {
+  initializePlayers(
+    player1: string,
+    player2: string,
+    startingScore: number,
+    maxLegs: number
+  ): void {
     this.state.players = [
-      {
-        name: player1,
-        score: gameType,
-        legsWon: 0,
-        turns: [],
-      },
-      {
-        name: player2,
-        score: gameType,
-        legsWon: 0,
-        turns: [],
-      },
+      { name: player1, score: startingScore, turns: [], legsWon: 0 },
+      { name: player2, score: startingScore, turns: [], legsWon: 0 }
     ];
+    this.state.startingScore = startingScore;
+    this.state.maxLegs = maxLegs;
     this.state.currentPlayer = 0;
-    this.state.maxLegs = legsPerSet;
   }
 
   getState(): GameState {
     return this.state;
   }
 
-  updateScore(playerIndex: number, newScore: number) {
-    this.state.players[playerIndex].score = newScore;
+  updateScore(playerIndex: number, newScore: number): void {
+    const player = this.state.players[playerIndex];
+    if (!player) throw new Error("Invalid player index");
+    player.score = newScore;
   }
 
-  addTurn(playerIndex: number, score: number) {
-    this.state.players[playerIndex].turns.push(score);
-  }
-
-  resetLeg() {
-    const gameType = this.state.players[0].score + this.state.players[0].turns.reduce((a, b) => b + a, 0); // or keep initial gameType in a variable
-    this.state.players.forEach((player) => {
-      player.score = gameType;
-      player.turns = [];
-    });
+  resetLeg(): void {
+    for (const p of this.state.players) {
+      p.score = this.state.startingScore;
+      p.turns = [];
+    }
     this.state.currentPlayer = 0;
-  }
-
-  setCurrentPlayer(index: number) {
-    this.state.currentPlayer = index;
   }
 }
