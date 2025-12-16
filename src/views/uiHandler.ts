@@ -1,48 +1,83 @@
-// /src/view/uiHandler.ts
-
-import { StateManager, GameState } from "../models/stateManager.js";
+import { StateManager } from "../models/stateManager.js";
+import { getAverage, getHighestTurn } from "../models/stats.js";
 
 export class UIHandler {
-  private stateManager: StateManager;
+  constructor(private stateManager: StateManager) {}
 
-  constructor(stateManager: StateManager) {
-    this.stateManager = stateManager;
-  }
-
-  updateScoreboard() {
-    const state: GameState = this.stateManager.getState();
-    const p1 = state.players[0];
-    const p2 = state.players[1];
-
-    (document.getElementById("p1-name") as HTMLElement).textContent = p1.name;
-    (document.getElementById("p2-name") as HTMLElement).textContent = p2.name;
-
-    (document.getElementById("p1-score") as HTMLElement).textContent = p1.score.toString();
-    (document.getElementById("p2-score") as HTMLElement).textContent = p2.score.toString();
-
-    (document.getElementById("p1-legs") as HTMLElement).textContent = p1.legsWon.toString();
-    (document.getElementById("p2-legs") as HTMLElement).textContent = p2.legsWon.toString();
-  }
-
-  highlightActivePlayer() {
+  updateScoreboard(): void {
     const state = this.stateManager.getState();
-    const p1Box = document.getElementById("player1-box")!;
-    const p2Box = document.getElementById("player2-box")!;
 
-    if (state.currentPlayer === 0) {
-      p1Box.classList.add("active-player");
-      p2Box.classList.remove("active-player");
-    } else {
-      p1Box.classList.remove("active-player");
-      p2Box.classList.add("active-player");
+    state.players.forEach((p, i) => {
+      const nameEl = document.getElementById(`name-${i}`);
+      const scoreEl = document.getElementById(`score-${i}`);
+      const legsEl = document.getElementById(`legs-${i}`);
+      const avgEl = document.getElementById(`avg-${i}`);
+      const highEl = document.getElementById(`high-${i}`);
+
+      if (nameEl) nameEl.textContent = p.name;
+      if (scoreEl) scoreEl.textContent = String(p.score);
+      if (legsEl) legsEl.textContent = String(p.legsWon);
+      if (avgEl) avgEl.textContent = String(getAverage(p));
+      if (highEl) highEl.textContent = String(getHighestTurn(p));
+    });
+  }
+
+  highlightActivePlayer(): void {
+    const state = this.stateManager.getState();
+
+    state.players.forEach((_, i) => {
+      const el = document.getElementById(`player-${i}`);
+      if (el) {
+        el.classList.toggle("active", i === state.currentPlayer);
+      }
+    });
+  }
+
+  showFlash(message: string, timeout = 3000): void {
+    this.showFlashWithType(message, "info", timeout);
+  }
+
+  showFlashWithType(message: string, type: "info" | "success" | "error" = "info", timeout = 3000): void {
+    const flash = document.getElementById("flash");
+    if (!flash) return;
+    flash.textContent = message;
+    flash.style.display = "block";
+    flash.className = "flash flash--visible flash--" + type;
+
+    // play a short beep for success/game-over
+    if (type === "success") this.playBeep(480, 0.12);
+    if (type === "error") this.playBeep(220, 0.18);
+
+    setTimeout(() => {
+      flash.classList.remove("flash--visible");
+      flash.style.display = "none";
+      flash.className = "flash";
+    }, timeout);
+  }
+
+  private playBeep(freq = 440, duration = 0.1) {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = "sine";
+      o.frequency.value = freq;
+      o.connect(g);
+      g.connect(ctx.destination);
+      g.gain.value = 0.05;
+      o.start();
+      setTimeout(() => {
+        o.stop();
+        ctx.close();
+      }, duration * 1000);
+    } catch (e) {
+      // Audio API may be blocked; ignore.
     }
   }
 
-  showLegWinner(winnerName: string) {
-    alert(`${winnerName} wins this leg!`);
-  }
-
-  showSetWinner(winnerName: string) {
-    alert(`🏆 ${winnerName} wins the set!`);
+  showDescription(text: string): void {
+    const desc = document.getElementById("description");
+    if (!desc) return;
+    desc.textContent = text;
   }
 }
