@@ -1,20 +1,13 @@
 {
-  "name": "smart-darts-score-keeper-group-12",
+  "name": "smart-darts-score-keeper",
   "version": "1.0.0",
-  "description": "To make it easy for you to get started with GitLab, here's a list of recommended next steps.",
-  "main": "index.js",
+  "description": "Browser-based darts score keeper using TypeScript (301 & 501 games)",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "type": "module",
+    "build": "tsc",
+    "serve": "python -m http.server 5500",
+    "start": "http-server -p 3000"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://git.dc.turkuamk.fi/poornima.wanasinghe/smart-darts-score-keeper-group-12.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "devDependencies": {
-    "typescript": "^5.9.3"
-  }
+  "author": "Group 12",
+  "license": "ISC"
 }
