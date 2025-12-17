@@ -29,7 +29,8 @@ export function applyHit(
   if (newScore === 0) {
     player.legsWon++;
     const winnerIndex = state.currentPlayer;
-    const gameOver = player.legsWon >= state.maxLegs;
+    const neededToWin = Math.ceil(state.maxLegs / 2);
+    const gameOver = player.legsWon >= neededToWin;
     if (gameOver) {
       // don't reset so UI can show final legs
       return { legWon: true, winnerIndex, gameOver: true, gameWinnerIndex: winnerIndex };
