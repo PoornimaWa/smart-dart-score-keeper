@@ -1,48 +1,98 @@
-import { setupController } from "./setup.js";
-import { toggleTheme, loadTheme } from "../view/themeManager.js";
-import {
-  calculateNewScore,
-  checkLegWinner,
-  switchPlayer,
-} from "../model/gameLogic.js";
+import { StateManager } from "../models/stateManager.js";
+import { UIHandler } from "../views/uiHandler.js";
+import { SetupController } from "./setup.js";  
+import { applyHit } from "../models/gameLogic.js";
+import { initTheme } from "../views/themeManager.js";
 
-const stateManager = setupController.getStateManager();
-const uiHandler = setupController.getUIHandler();
+const stateManager = new StateManager();
+const uiHandler = new UIHandler(stateManager);
 
-window.addEventListener("DOMContentLoaded", () => {
-  loadTheme();
+new SetupController(stateManager, uiHandler);
 
-  const addScoreButton = document.getElementById("add-score");
-  const scoreInput = document.getElementById("score-input") as HTMLInputElement | null;
-  const themeButton = document.getElementById("theme-toggle");
+initTheme();
+// show short description before starting
+uiHandler.showDescription("Enter the players and settings, then press Start Game to begin.");
 
-  addScoreButton?.addEventListener("click", () => {
-    const value = Number(scoreInput?.value);
+document.getElementById("hit-btn")?.addEventListener("click", () => {
+  const input = document.getElementById("hit") as HTMLInputElement;
+  const raw = input.value;
+  const hit = Number(raw);
 
-    if (Number.isNaN(value) || value < 0) {
-      alert("Please enter a valid score.");
-      return;
-    }
+  // basic validation
+  if (!raw || Number.isNaN(hit) || hit < 0) {
+    uiHandler.showFlash("Invalid hit value. Enter a non-negative number.");
+    return;
+  }
 
-    const newScore = calculateNewScore(stateManager, value);
-    stateManager.updateCurrentPlayerScore(newScore);
+  // limit to reasonable maximum per turn (three darts = 180)
+  if (hit > 180) {
+    uiHandler.showFlash("Hit too large. Maximum per turn is 180.");
+    return;
+  }
 
-    const winner = checkLegWinner(stateManager);
+  const result = applyHit(stateManager, hit);
+  uiHandler.updateScoreboard();
+  uiHandler.highlightActivePlayer();
 
-    if (winner) {
-      uiHandler.showWinner(winner);
-      alert(`${winner.name} wins the leg!`);
+  if (result && (result as any).bust) {
+    uiHandler.showFlashWithType("Bust! Score unchanged — turn passes to the other player.", "error");
+  }
+
+  if (result && (result as any).legWon) {
+    const winnerIdx = (result as any).winnerIndex;
+    const state = stateManager.getState();
+    const name = state.players[winnerIdx]?.name ?? "Player";
+    if ((result as any).gameOver) {
+      uiHandler.showFlashWithType(`Game over — ${name} has won the game!`, "success", 5000);
+      // disable controls
+      const btn = document.getElementById("hit-btn") as HTMLButtonElement | null;
+      const inp = document.getElementById("hit") as HTMLInputElement | null;
+      if (btn) btn.disabled = true;
+      if (inp) inp.disabled = true;
+      const ng = document.getElementById("new-game") as HTMLButtonElement | null;
+      if (ng) {
+        ng.style.display = "inline-block";
+        ng.removeAttribute("aria-hidden");
+        ng.addEventListener("click", () => window.location.reload());
+      }
     } else {
-      switchPlayer(stateManager);
+      uiHandler.showFlashWithType(`${name} won the leg!`, "success");
     }
+  }
 
-    uiHandler.updateScoreboard();
-    uiHandler.highlightActivePlayer();
-
-    if (scoreInput) scoreInput.value = "";
-  });
-
-  themeButton?.addEventListener("click", () => {
-    toggleTheme();
-  });
+  input.value = "";
 });
+
+// Pause button toggles input availability
+const pauseBtn = document.getElementById("pause-btn") as HTMLButtonElement | null;
+if (pauseBtn) {
+  pauseBtn.addEventListener("click", () => {
+    const inp = document.getElementById("hit") as HTMLInputElement | null;
+    const btn = document.getElementById("hit-btn") as HTMLButtonElement | null;
+    const isPaused = pauseBtn.getAttribute("aria-pressed") === "true";
+    if (!isPaused) {
+      // pause
+      if (inp) inp.disabled = true;
+      if (btn) btn.disabled = true;
+      pauseBtn.setAttribute("aria-pressed", "true");
+      pauseBtn.textContent = "Resume";
+      uiHandler.showFlashWithType("Paused", "info", 2000);
+    } else {
+      // resume
+      if (inp) inp.disabled = false;
+      if (btn) btn.disabled = false;
+      pauseBtn.setAttribute("aria-pressed", "false");
+      pauseBtn.textContent = "Pause";
+      uiHandler.showFlashWithType("Resumed", "info", 1500);
+    }
+  });
+}
+
+// Exit button asks for confirmation and returns to setup (reload page)
+const exitBtn = document.getElementById("exit-btn") as HTMLButtonElement | null;
+if (exitBtn) {
+  exitBtn.addEventListener("click", () => {
+    const ok = confirm("Exit the current game and return to setup?\nUnsaved progress will be lost.");
+    if (ok) window.location.reload();
+  });
+}
