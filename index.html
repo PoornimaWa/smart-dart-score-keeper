@@ -1,12 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Darts Score Keeper</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Darts Score Keeper</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1> Smart Darts Score Keeper</h1>
+  <div id="setup-screen">
+    <h1 class="welcome">Welcome to Darts Score Keeper</h1>
+    <p id="description" class="description" aria-live="polite" role="status">Enter two player names, choose game type and number of legs, then press Start Game.</p>
+    <div class="players-row">
+      <div>
+        <label for="player1">Player 1</label>
+        <input id="player1" placeholder="Player 1" aria-required="true" />
+      </div>
+      <div>
+        <label for="player2">Player 2</label>
+        <input id="player2" placeholder="Player 2" aria-required="true" />
+      </div>
+    </div>
+
+    <div class="controls-row">
+      <div>
+        <label for="gametype">Game type</label>
+        <select id="gametype" aria-describedby="gametype-desc">
+          <option value="301">301 Up</option>
+          <option value="501">501 Up</option>
+        </select>
+        <div id="gametype-desc" class="visually-hidden">Choose starting score per leg: 301 or 501 points. Players subtract hits from this value.</div>
+      </div>
+
+      <div>
+        <label for="legs">Set size</label>
+        <select id="legs" aria-describedby="legs-desc">
+          <option value="3">Best of 3</option>
+          <option value="5">Best of 5</option>
+        </select>
+        <div id="legs-desc" class="visually-hidden">Number of legs to play. Best of 3 means first to 2 legs wins; Best of 5 means first to 3 legs wins.</div>
+      </div>
+
+      <button id="start-game" type="button" aria-label="Start game">Start Game</button>
+    </div>
+  </div>
+
+  <div id="game-screen" style="display:none;">
+    <header class="game-header">
+      <h1>Darts Score Keeper</h1>
+      <button class="theme-toggle" aria-label="Toggle theme">Toggle Theme</button>
+    </header>
+
+    <section class="scoreboard" aria-label="Scoreboard">
+      <div class="player" id="player-0">
+        <h2 id="name-0"></h2>
+        <p>Score: <span id="score-0">0</span></p>
+        <p>Legs: <span id="legs-0">0</span></p>
+        <p>Average: <span id="avg-0">0</span></p>
+        <p>Highest: <span id="high-0">0</span></p>
+      </div>
+
+      <div class="player" id="player-1">
+        <h2 id="name-1"></h2>
+        <p>Score: <span id="score-1">0</span></p>
+        <p>Legs: <span id="legs-1">0</span></p>
+        <p>Average: <span id="avg-1">0</span></p>
+        <p>Highest: <span id="high-1">0</span></p>
+      </div>
+    </section>
+
+    <div id="flash" class="flash" role="status" aria-live="polite" style="display:none"></div>
+    <section class="controls" aria-label="Controls">
+      <label for="hit">Enter hit:</label>
+      <input id="hit" type="number" min="0" aria-label="Hit points" />
+      <button id="hit-btn">Submit Hit</button>
+      <button id="pause-btn" type="button" aria-pressed="false">Pause</button>
+      <button id="exit-btn" type="button">Exit</button>
+      <button id="new-game" style="display:none;" aria-hidden="true" aria-label="Start a new game" type="button">New Game</button>
+    </section>
+  </div>
+
+  <script type="module" src="./dist/controllers/main.js"></script>
 </body>
 </html>
