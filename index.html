@@ -13,10 +13,12 @@
       <div>
         <label for="player1">Player 1</label>
         <input id="player1" placeholder="Player 1" aria-required="true" />
+        <div id="turns-0" class="turns-list"></div>
       </div>
       <div>
         <label for="player2">Player 2</label>
         <input id="player2" placeholder="Player 2" aria-required="true" />
+        <div id="turns-1" class="turns-list"></div>
       </div>
     </div>
 
@@ -44,8 +46,8 @@
   </div>
 
   <div id="game-screen" style="display:none;">
-    <header class="game-header">
-      <h1>Darts Score Keeper</h1>
+    <header class="game-header header-flex">
+      <h1 class="header-title">Darts Score Keeper</h1>
       <button class="theme-toggle" aria-label="Toggle theme">Toggle Theme</button>
     </header>
 
@@ -69,15 +71,34 @@
 
     <div id="flash" class="flash" role="status" aria-live="polite" style="display:none"></div>
     <section class="controls" aria-label="Controls">
-      <label for="hit">Enter hit:</label>
-      <input id="hit" type="number" min="0" aria-label="Hit points" />
-      <button id="hit-btn">Submit Hit</button>
-      <button id="pause-btn" type="button" aria-pressed="false">Pause</button>
-      <button id="exit-btn" type="button">Exit</button>
-      <button id="new-game" style="display:none;" aria-hidden="true" aria-label="Start a new game" type="button">New Game</button>
+      <section class="hit-pause-row hit-entry-container">
+        <div class="hit-entry-section">
+          <div class="hit-entry-inputs-row">
+            <label for="hit1" class="hit-label">Enter hits for this turn:</label>
+            <input id="hit1" type="number" min="0" aria-label="Hit 1 points" placeholder="Hit 1" style="width:60px;" />
+            <input id="hit2" type="number" min="0" aria-label="Hit 2 points" placeholder="Hit 2" style="width:60px;" />
+            <input id="hit3" type="number" min="0" aria-label="Hit 3 points" placeholder="Hit 3" style="width:60px;" />
+          </div>
+          <div class="hit-entry-buttons-row">
+            <button id="hit-btn">Submit Turn</button>
+            <button id="edit-hit-btn" disabled>Edit</button>
+            <button id="remove-hit-btn" disabled>Remove</button>
+          </div>
+        </div>
+        <div class="section-separator vertical-separator"></div>
+        <section class="pause-exit-section">
+          <button id="pause-btn" class="pause-accessible" type="button" aria-pressed="false">Pause</button>
+          <button id="exit-btn" type="button">Exit</button>
+        </section>
+      </section>
     </section>
+      <div class="game-controls-row">
+      <button id="new-game" style="display:none;" aria-hidden="true" aria-label="Start a new game" type="button">New Game</button>
+    </div>
+
   </div>
 
+  
   <script type="module" src="./dist/controllers/main.js"></script>
 </body>
 </html>

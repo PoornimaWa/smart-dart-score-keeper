@@ -1,0 +1,15 @@
+# Ignore the dist folder
+/dist/
+# Compiled JavaScript files
+*.js
+*.js. map
+
+# Compiled output directory
+dist/
+build/
+
+# Node modules
+node_modules/
+
+# TypeScript cache
+*.tsbuildinfo

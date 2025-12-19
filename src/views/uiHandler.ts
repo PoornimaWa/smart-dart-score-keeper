@@ -19,20 +19,28 @@ export class UIHandler {
       if (legsEl) legsEl.textContent = String(p.legsWon);
       if (avgEl) avgEl.textContent = String(getAverage(p));
       if (highEl) highEl.textContent = String(getHighestTurn(p));
-    });
-  }
 
-  highlightActivePlayer(): void {
-    const state = this.stateManager.getState();
-
-    state.players.forEach((_, i) => {
-      const el = document.getElementById(`player-${i}`);
-      if (el) {
-        el.classList.toggle("active", i === state.currentPlayer);
+      // Render turn history with Edit/Remove buttons
+      const turnsEl = document.getElementById(`turns-${i}`);
+      if (turnsEl) {
+        turnsEl.innerHTML = "";
+        p.turns.forEach((turn, tIdx) => {
+          const div = document.createElement("div");
+          div.className = "turn-row";
+          div.innerHTML = `
+            <span class="turn-label">Turn ${tIdx + 1}: [${turn.hits.join(", ")}]</span>
+            <button class="edit-turn-btn" data-player="${i}" data-turn="${tIdx}">Edit</button>
+            <button class="remove-turn-btn" data-player="${i}" data-turn="${tIdx}">Remove</button>
+            <span class="edit-form" style="display:none;"></span>
+          `;
+          turnsEl.appendChild(div);
+        });
       }
     });
   }
-
+/*
+  // highlightActivePlayer removed: no player highlighting
+*/
   showFlash(message: string, timeout = 3000): void {
     this.showFlashWithType(message, "info", timeout);
   }

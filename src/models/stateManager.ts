@@ -1,7 +1,12 @@
+
+export interface Turn {
+  hits: number[]; // always length 3
+}
+
 export interface Player {
   name: string;
   score: number;
-  turns: number[];
+  turns: Turn[];
   legsWon: number;
 }
 

@@ -32,7 +32,6 @@ export class SetupController {
 
     this.stateManager.initializePlayers(p1, p2, score, legs);
     this.uiHandler.updateScoreboard();
-    this.uiHandler.highlightActivePlayer();
 
     document.getElementById("setup-screen")!.style.display = "none";
     document.getElementById("game-screen")!.style.display = "block";
