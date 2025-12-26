@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Darts Score Keeper</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="setup-screen">
+    <h1 class="welcome">Welcome to Darts Score Keeper</h1>
+    <p id="description" class="description" aria-live="polite" role="status">Enter two player names, choose game type and number of legs, then press Start Game.</p>
+    <div class="players-row">
+      <div>
+        <label for="player1">Player 1</label>
+        <input id="player1" placeholder="Player 1" aria-required="true" />
+        <div id="turns-0" class="turns-list"></div>
+      </div>
+      <div>
+        <label for="player2">Player 2</label>
+        <input id="player2" placeholder="Player 2" aria-required="true" />
+        <div id="turns-1" class="turns-list"></div>
+      </div>
+    </div>
+
+    <div class="controls-row">
+      <div>
+        <label for="gametype">Game type</label>
+        <select id="gametype" aria-describedby="gametype-desc">
+          <option value="301">301 Up</option>
+          <option value="501">501 Up</option>
+        </select>
+        <div id="gametype-desc" class="visually-hidden">Choose starting score per leg: 301 or 501 points. Players subtract hits from this value.</div>
+      </div>
+
+      <div>
+        <label for="legs">Set size</label>
+        <select id="legs" aria-describedby="legs-desc">
+          <option value="3">Best of 3</option>
+          <option value="5">Best of 5</option>
+        </select>
+        <div id="legs-desc" class="visually-hidden">Number of legs to play. Best of 3 means first to 2 legs wins; Best of 5 means first to 3 legs wins.</div>
+      </div>
+
+      <button id="start-game" type="button" aria-label="Start game">Start Game</button>
+    </div>
+  </div>
+
+  <div id="game-screen" style="display:none;">
+    <header class="game-header header-flex">
+      <h1 class="header-title">Darts Score Keeper</h1>
+      <button class="theme-toggle" aria-label="Toggle theme">Toggle Theme</button>
+    </header>
+
+    <section class="scoreboard" aria-label="Scoreboard">
+      <div class="player" id="player-0">
+        <h2 id="name-0"></h2>
+        <p>Score: <span id="score-0">0</span></p>
+        <p>Legs: <span id="legs-0">0</span></p>
+        <p>Average: <span id="avg-0">0</span></p>
+        <p>Highest: <span id="high-0">0</span></p>
+      </div>
+
+      <div class="player" id="player-1">
+        <h2 id="name-1"></h2>
+        <p>Score: <span id="score-1">0</span></p>
+        <p>Legs: <span id="legs-1">0</span></p>
+        <p>Average: <span id="avg-1">0</span></p>
+        <p>Highest: <span id="high-1">0</span></p>
+      </div>
+    </section>
+
+    <div id="flash" class="flash" role="status" aria-live="polite" style="display:none"></div>
+    <section class="controls" aria-label="Controls">
+      <section class="hit-pause-row hit-entry-container">
+        <div class="hit-entry-section">
+          <div class="hit-entry-inputs-row">
+            <label for="hit1" class="hit-label">Enter hits for this turn:</label>
+            <input id="hit1" type="number" min="0" aria-label="Hit 1 points" placeholder="Hit 1" style="width:60px;" />
+            <input id="hit2" type="number" min="0" aria-label="Hit 2 points" placeholder="Hit 2" style="width:60px;" />
+            <input id="hit3" type="number" min="0" aria-label="Hit 3 points" placeholder="Hit 3" style="width:60px;" />
+          </div>
+          <div class="hit-entry-buttons-row">
+            <button id="hit-btn">Submit Turn</button>
+            <button id="edit-hit-btn" disabled>Edit</button>
+            <button id="remove-hit-btn" disabled>Remove</button>
+          </div>
+        </div>
+        <div class="section-separator vertical-separator"></div>
+        <section class="pause-exit-section">
+          <button id="pause-btn" class="pause-accessible" type="button" aria-pressed="false">Pause</button>
+          <button id="exit-btn" type="button">Exit</button>
+        </section>
+      </section>
+    </section>
+      <div class="game-controls-row">
+      <button id="new-game" style="display:none;" aria-hidden="true" aria-label="Start a new game" type="button">New Game</button>
+    </div>
+
+  </div>
+
+  
+  <script type="module" src="./dist/controllers/main.js"></script>
+</body>
+</html>

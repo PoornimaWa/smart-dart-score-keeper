@@ -1,0 +1,16 @@
+{
+  "name": "smart-darts-score-keeper",
+  "version": "1.0.0",
+  "description": "Browser-based darts score keeper using TypeScript (301 & 501 games)",
+  "scripts": {
+    "type": "module",
+    "build": "tsc",
+    "serve": "python -m http.server 5500",
+    "start": "http-server -p 3002"
+  },
+  "author": "Poornima Wanasinghe",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}
