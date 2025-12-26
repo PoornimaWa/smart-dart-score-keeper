@@ -6,9 +6,9 @@
     "type": "module",
     "build": "tsc",
     "serve": "python -m http.server 5500",
-    "start": "http-server -p 3001"
+    "start": "http-server -p 3002"
   },
-  "author": "Group 12",
+  "author": "Poornima Wanasinghe",
   "license": "ISC",
   "dependencies": {
     "http-server": "^14.1.1"
